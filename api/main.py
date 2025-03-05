@@ -15,8 +15,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Load the trained AI model
-MODEL_PATH = "path/to/your/model.pth"  # Update with actual path
+# Path to the trained AI model (update with the actual path)
+MODEL_PATH = "models/NeuralFin-ai.pth"  # Update with the correct model file path
 model = load_model(MODEL_PATH)
 
 @app.get("/")
@@ -43,7 +43,7 @@ async def analyze_image(file: UploadFile = File(...)):
             raise HTTPException(status_code=400, detail="Image processing failed")
 
         # Convert image to tensor for PyTorch
-        image_tensor = torch.from_numpy(processed_image).unsqueeze(0)  # Add batch dimension
+        image_tensor = processed_image.unsqueeze(0)  # Add batch dimension
 
         # Perform inference
         with torch.no_grad():

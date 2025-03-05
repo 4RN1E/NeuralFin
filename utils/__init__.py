@@ -3,6 +3,25 @@ from PIL import Image
 import io
 import torch
 
+def load_model(model_path: str):
+    """
+    Load the AI model from the specified path.
+
+    Args:
+    - model_path: Path to the saved model file
+
+    Returns:
+    - The loaded PyTorch model
+    """
+    try:
+        # Load the model state_dict
+        model = torch.load(model_path)
+        model.eval()  # Set the model to evaluation mode
+        return model
+    except Exception as e:
+        print(f"Error loading model: {e}")
+        raise
+
 def process_image(image_bytes: bytes):
     """
     Process the uploaded image for AI model input.
@@ -11,7 +30,7 @@ def process_image(image_bytes: bytes):
     - image_bytes: Bytes of the uploaded image
 
     Returns: 
-    - Processed image or None if processing fails
+    - Processed image as a PyTorch tensor or None if processing fails
     """
     try:
         # Open the image
@@ -22,7 +41,7 @@ def process_image(image_bytes: bytes):
             image = image.convert('RGB')
 
         # Resize image (adjust size as needed)
-        image = image.resize((224, 224))
+        image = image.resize((224, 224))  # Make sure this size matches your model's input requirements
 
         # Convert to numpy array
         image_array = np.array(image)

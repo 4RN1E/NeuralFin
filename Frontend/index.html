@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuralFin - Image Analysis</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input[type="file"] {
+            margin: 20px 0;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Shark Conservation AI - NeuralFin</h1>
+        <form id="uploadForm">
+            <input type="file" id="imageFile" accept="image/*" required>
+            <button type="submit">Analyze Image</button>
+        </form>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async function(event) {
+            event.preventDefault();  // Prevent the default form submission
+
+            const fileInput = document.getElementById('imageFile');
+            const formData = new FormData();
+            formData.append("file", fileInput.files[0]);
+
+            try {
+                // Send POST request to FastAPI backend with the image file
+                const response = await fetch('http://127.0.0.1:8000/analyze', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    throw new Error('Image analysis failed');
+                }
+
+                const result = await response.json();
+                // Display the prediction result
+                document.getElementById('result').innerHTML = `
+                    <p>Filename: ${result.filename}</p>
+                    <p>Prediction: ${result.prediction}</p>
+                    <p>Status: ${result.status}</p>
+                    <p>${result.message}</p>
+                `;
+            } catch (error) {
+                document.getElementById('result').innerHTML = `
+                    <p style="color: red;">Error: ${error.message}</p>
+                `;
+            }
+        });
+    </script>
+
+</body>
+</html>

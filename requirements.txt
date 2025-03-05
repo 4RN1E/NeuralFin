@@ -1,0 +1,6 @@
+fastapi==0.95.2
+uvicorn==0.23.2
+pytorch==1.13.0  # Or any specific version of PyTorch you're using
+python-multipart==0.0.5
+pillow==9.3.0
+numpy==1.23.4
